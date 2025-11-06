@@ -151,6 +151,10 @@ $(call soong_config_set,surfaceflinger,frame_rate_category_min,60)
 PRODUCT_PACKAGES += \
     android.hardware.drm-service.clearkey
 
+# Device-specific settings
+PRODUCT_PACKAGES += \
+    XiaomiParts
+
 # Dynamic partitions
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 
