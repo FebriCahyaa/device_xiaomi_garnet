@@ -155,6 +155,9 @@ $(call soong_config_set,surfaceflinger,frame_rate_category_min,60)
 # Dolby
 $(call inherit-product, hardware/dolby/dolby.mk)
 
+PRODUCT_PACKAGES += \
+    LunarisDolby
+
 # DRM
 PRODUCT_PACKAGES += \
     android.hardware.drm-service.clearkey
