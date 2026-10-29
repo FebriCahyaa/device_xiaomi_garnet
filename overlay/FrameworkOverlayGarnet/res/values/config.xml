@@ -79,6 +79,9 @@
          May be less than the minimum allowed brightness setting
          that can be set by the user. -->
     <item name="config_screenBrightnessDozeFloat" format="float" type="dimen">0.06667</item>
+    
+    <!-- System Info -->
+    <integer name="config_sysCPUTempMultiplier">1000</integer>
 
     <!-- Stability requirements in milliseconds for accepting a new brightness level.  This is used
          for debouncing the light sensor.  Different constants are used to debounce the light sensor

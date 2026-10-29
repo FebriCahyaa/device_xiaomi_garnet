@@ -22,7 +22,14 @@ PRODUCT_BRAND := Redmi
 PRODUCT_MODEL := 2312DRA50G
 
 # Lunaris: use the device's custom in-display fingerprint implementation.
+LUNARIS_BUILD_TYPE := Community
+WITH_GMS := true
+WITH_PIXEL_LAUNCHER := false
+TARGET_OPTIMIZED_DEXOPT := true
 TARGET_CUSTOM_UDFPS := true
+TARGET_BOOT_ANIMATION_RES := 1080
+USE_REALITY_ENGINE := true
+SURFACE_FLINGER_BOOST := true
 
 PRODUCT_SYSTEM_NAME := garnet_global
 PRODUCT_SYSTEM_DEVICE := garnet
