@@ -21,6 +21,9 @@ PRODUCT_MANUFACTURER := Xiaomi
 PRODUCT_BRAND := Redmi
 PRODUCT_MODEL := 2312DRA50G
 
+# Lunaris: use the device's custom in-display fingerprint implementation.
+TARGET_CUSTOM_UDFPS := true
+
 PRODUCT_SYSTEM_NAME := garnet_global
 PRODUCT_SYSTEM_DEVICE := garnet
 
