@@ -142,6 +142,9 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     hardware/qcom-caf/sm8450/display/config/snapdragon_color_libs_config.xml:$(TARGET_COPY_OUT_VENDOR)/etc/snapdragon_color_libs_config.xml
 
+PRODUCT_VENDOR_PROPERTIES += \
+    vendor.display.idle_time=0
+
 $(call soong_config_set_bool,use_jemalloc_for_display_stack,true)
 
 $(call soong_config_set,surfaceflinger,frame_rate_category_high,120)
