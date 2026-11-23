@@ -22,10 +22,15 @@ and committed with `git commit -s`:
   Roomservice cannot point at another GitHub account, hence the local manifest.
 - `device.mk`: added `XiaomiParts` to `PRODUCT_PACKAGES` so the platform-signed
   system_ext app from our fork is installed.
+- `sepolicy/vendor/xiaomi_parts.te`: grants `system_app` the sysfs access
+  XiaomiParts needs for charging, display, CPU and GPU nodes. AOSP system_app
+  has no sysfs write rule and no neverallow forbids this.
+- `rootdir/etc/init.target.rc`: chown/chmod for the charging, devfreq, cpufreq
+  and VM nodes XiaomiParts writes; display nodes are read-only sysfs attrs.
 - `README.md`: setup and blob-extraction instructions.
 
-No vendor blob, overlay value, partition size, AVB key or sepolicy rule from
-the base tree was changed.
+No vendor blob, overlay value, partition size or AVB key from the base tree was
+changed.
 
 ## Companion repositories
 
