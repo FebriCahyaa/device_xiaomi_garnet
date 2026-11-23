@@ -230,18 +230,40 @@ on boot
     chown system system /sys/devices/system/cpu/cpufreq
     chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
     chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
     chown system system /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
     chown system system /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
     chmod 0664 /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
     chmod 0664 /sys/devices/system/cpu/cpufreq/policy0/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
     chmod 0664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
     chmod 0664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
+    chmod 0664 /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+
+    # CPU hotplug nodes used by XiaomiParts CoreControl. CPU0 has no online node.
+    chown system system /sys/devices/system/cpu/cpu1/online
+    chown system system /sys/devices/system/cpu/cpu2/online
+    chown system system /sys/devices/system/cpu/cpu3/online
+    chown system system /sys/devices/system/cpu/cpu4/online
+    chown system system /sys/devices/system/cpu/cpu5/online
+    chown system system /sys/devices/system/cpu/cpu6/online
+    chown system system /sys/devices/system/cpu/cpu7/online
+    chmod 0664 /sys/devices/system/cpu/cpu1/online
+    chmod 0664 /sys/devices/system/cpu/cpu2/online
+    chmod 0664 /sys/devices/system/cpu/cpu3/online
+    chmod 0664 /sys/devices/system/cpu/cpu4/online
+    chmod 0664 /sys/devices/system/cpu/cpu5/online
+    chmod 0664 /sys/devices/system/cpu/cpu6/online
+    chmod 0664 /sys/devices/system/cpu/cpu7/online
 
     # Memory tuning (UMM Tier 2). XiaomiParts writes /proc/sys/vm nodes, not /sys/vm.
     chown system system /proc/sys/vm/swappiness
     chmod 0664 /proc/sys/vm/swappiness
     chown system system /proc/sys/vm/compaction_proactiveness
     chmod 0664 /proc/sys/vm/compaction_proactiveness
+    chown system system /proc/sys/vm/compact_memory
+    chmod 0664 /proc/sys/vm/compact_memory
 
     # Create persist for camera calibration data
     mkdir /mnt/vendor/persist/camera 0755 system cameraserver
