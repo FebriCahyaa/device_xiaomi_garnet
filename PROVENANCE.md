@@ -40,12 +40,12 @@ and committed with `git commit -s`:
   roots at the paths that exist in `sm7435-modules`.
 - `modules/modules.list.second_stage`: dropped modules already loaded in the
   first stage and `qcom-cpufreq-hw-debug.ko`, which has no enabled Kconfig.
-- `configs/hidl/*`: unchanged. `vendor.qti.hardware.qccsyshal@1.2` is provided
-  from `system_ext` and is already declared in `framework_manifest.xml`; it
-  must not be repeated in the device manifest. `target-level="6"` and
-  `BOARD_SHIPPING_API_LEVEL := 31` remain at the values inherited from the
-  base tree because changing the shipping FCM level requires a full VINTF
-  requalification.
+- `configs/hidl/manifest.xml`: `target-level` bumped to `7` and
+  `BOARD_SHIPPING_API_LEVEL`/`PRODUCT_SHIPPING_API_LEVEL` bumped to `33` to match
+  garnet's launch API/FCM and LineageOS 24.0 expectations. The manifest content
+  matches the lineage-24.0 garnet manifest; still revalidate VINTF in a full
+  tree. `vendor.qti.hardware.qccsyshal@1.2` remains in `framework_manifest.xml`
+  only and is not duplicated in the device manifest.
 - `overlay/*`: unchanged. The GL eSIM overlay deliberately requires both
   `ro.boot.hardware.sku=garnet` and `ro.boot.product.hardware.sku=GL`, as in
   the upstream fix that distinguishes global garnet from garnetp.

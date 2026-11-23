@@ -67,9 +67,10 @@ swap/zram writeback and schedutil settings used by this ROM. See
 External modules are built from `kernel/xiaomi/sm7435-modules`. The CVP sources
 live in `qcom/opensource/eva-kernel-v1` on this branch, so there is no separate
 `cvp-kernel` entry. `init_boot` and `system_dlkm` are included in `AB_OTA_PARTITIONS`
-and have matching AVB/fstab wiring; VINTF still uses Android 12 FCM
-(`target-level="6"`) and `BOARD_SHIPPING_API_LEVEL := 31`, unchanged from the
-base tree.
+and have matching AVB/fstab wiring. VINTF is declared as Android 13 FCM
+(`target-level="7"`) with `BOARD_SHIPPING_API_LEVEL := 33`, matching garnet's
+launch API and the LineageOS 24.0 device manifest. Revalidate VINTF in a full
+tree before shipping.
 
 XiaomiParts is platform-signed and installed as a privileged `system_ext` app.
 Its 6.6-only controls read `/proc/sys/vm/*`, charging sysfs from
