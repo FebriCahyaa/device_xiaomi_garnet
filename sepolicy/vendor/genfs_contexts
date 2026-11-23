@@ -28,3 +28,32 @@ genfscon sysfs /devices/platform/soc/soc:fingerprint_goodix/wakeup u:object_r:sy
 
 # Walt
 genfscon proc /sys/walt u:object_r:proc_walt:s0
+
+# XiaomiParts 6.6 tunables. Explicit labels avoid granting system_app write
+# access to all of sysfs. Charging nodes are exposed by qti_battery_charger_xiaomi.
+genfscon sysfs /class/qcom-battery u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/virtual/qcom-battery u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/virtual/thermal/thermal_message u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /class/thermal/thermal_message u:object_r:xiaomi_parts_sysfs:s0
+
+# CPU policy nodes and the online knobs used by core control. Keep the label
+# narrower than AOSP's /devices/system/cpu catch-all.
+genfscon sysfs /devices/system/cpu/possible u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/system/cpu/cpufreq/policy u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/system/cpu/cpu1/online u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/system/cpu/cpu2/online u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/system/cpu/cpu3/online u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/system/cpu/cpu4/online u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/system/cpu/cpu5/online u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/system/cpu/cpu6/online u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/system/cpu/cpu7/online u:object_r:xiaomi_parts_sysfs:s0
+
+# Adreno devfreq nodes and read-only display capability nodes.
+genfscon sysfs /class/kgsl/kgsl-3d0 u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /devices/platform/soc/kgsl-3d0 u:object_r:xiaomi_parts_sysfs:s0
+genfscon sysfs /class/drm u:object_r:xiaomi_parts_sysfs:s0
+
+# procfs VM tunables written by UMM Tier 2.
+genfscon proc /sys/vm/swappiness u:object_r:xiaomi_parts_proc_vm:s0
+genfscon proc /sys/vm/compaction_proactiveness u:object_r:xiaomi_parts_proc_vm:s0
+genfscon proc /sys/vm/compact_memory u:object_r:xiaomi_parts_proc_vm:s0

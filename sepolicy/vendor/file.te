@@ -23,3 +23,8 @@ type proc_walt, fs_type, proc_type;
 
 # Wifi
 type vendor_mac_vendor_data_file, data_file_type, file_type, mlstrustedobject;
+
+# XiaomiParts: sysfs tunables (charging, thermal, cpufreq, devfreq, GPU) and
+# /proc/sys/vm nodes written by UMM Tier 2.
+type xiaomi_parts_sysfs, fs_type, sysfs_type;
+type xiaomi_parts_proc_vm, fs_type, proc_type;

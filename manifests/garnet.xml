@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copy this file to .repo/local_manifests/garnet.xml in your LineageOS 24.0
-  workspace before running breakfast. It pins the FebriCahyaa forks that make
-  up the garnet 6.6 build; lineage.dependencies only resolves LineageOS-owned
-  repositories and cannot point at a different GitHub account.
+  After cloning this device tree to device/xiaomi/garnet, copy the file to
+  .repo/local_manifests/garnet.xml in your LineageOS 24.0 workspace before
+  running breakfast. It pins the FebriCahyaa forks that make up the garnet 6.6
+  build; lineage.dependencies only resolves LineageOS-owned repositories and
+  cannot point at a different GitHub account. The device tree itself is not
+  listed here so repo cannot replace the checkout the manifest came from.
 -->
 <manifest>
     <remote name="febri" fetch="https://github.com/FebriCahyaa" />
-
-    <project path="device/xiaomi/garnet"
-             name="device_xiaomi_garnet"
-             remote="febri"
-             revision="garnet-6.6" />
 
     <project path="vendor/xiaomi/garnet"
              name="vendor_xiaomi_garnet"

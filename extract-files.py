@@ -86,10 +86,7 @@ blob_fixups: blob_fixups_user_type = {
             'libtinyxml2.so',
             'libtinyxml2-v34.so'
         ),
-    (
-        'vendor/etc/camera/pureView_parameter.xml',
-        'vendor/etc/camera/pureShot_parameter.xml'
-    ): blob_fixup()
+    'vendor/etc/camera/pureView_parameter.xml': blob_fixup()
         .regex_replace(r'=(\d+)>', r'="\1">'),
     'vendor/etc/media_codecs_parrot_v0.xml': blob_fixup()
         .regex_replace('.+media_codecs_(google_audio|google_c2|google_telephony|vendor_audio).+\n', '')

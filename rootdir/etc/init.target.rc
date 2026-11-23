@@ -124,7 +124,7 @@ on post-fs-data
     chmod 0664 /sys/class/leds/led:flash_0/brightness
     chmod 0664 /sys/class/leds/led:flash_1/brightness
     chmod 0664 /sys/class/leds/led:flash_2/brightness
-    chmod 0664 /sys/class/leds/led:flash_3/brightnesssss
+    chmod 0664 /sys/class/leds/led:flash_3/brightness
     chmod 0664 /sys/class/leds/led:switch_0/brightness
     chmod 0664 /sys/class/leds/led:switch_1/brightness
     chmod 0664 /sys/class/leds/led:switch_2/brightness
@@ -174,6 +174,7 @@ on early-boot
 
 on boot
     chown system system /sys/class/thermal/thermal_message/sconfig
+    chmod 0664 /sys/class/thermal/thermal_message/sconfig
     chown system system /sys/class/thermal/thermal_message/charger_temp
     chown system system /sys/class/thermal/thermal_message/board_sensor_temp_comp
     chown system system /sys/class/thermal/thermal_message/cpu_nolimit_temp
@@ -189,18 +190,18 @@ on boot
     chown cameraserver cameraserver /dev/cpuset/camera-daemon
     chown cameraserver cameraserver /dev/cpuset/camera-daemon/tasks
     chmod 0660 /dev/cpuset/camera-daemon/tasks
-    chown system /sys/devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_enable
+    chown system system /sys/devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_enable
     chmod 0660 /sys/devices/platform/soc/990000.i2c/i2c-0/0-0038/trusted_touch_enable
-    chown system /sys/devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_enable
+    chown system system /sys/devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_enable
     chmod 0660 /sys/devices/platform/soc/990000.spi/spi_master/spi0/spi0.0/trusted_touch_enable
-    chown system /sys/devices/system/cpu/hyp_core_ctl/enable
-    chown system /sys/devices/system/cpu/hyp_core_ctl/hcc_min_freq
+    chown system system /sys/devices/system/cpu/hyp_core_ctl/enable
+    chown system system /sys/devices/system/cpu/hyp_core_ctl/hcc_min_freq
     #USB controller configuration
     setprop vendor.usb.controller a600000.dwc3
 
-    #chown/chmod input_suspend node
+    # XiaomiParts writes input_suspend; match the ueventd mode (0660 system:system).
     chown system system /sys/class/qcom-battery/input_suspend
-    chmod 774 /sys/class/qcom-battery/input_suspend
+    chmod 0660 /sys/class/qcom-battery/input_suspend
 
     # XiaomiParts (platform-signed, UID system) writes charging mode nodes
     # and reads the charge status node added in our 6.6 kernel.
@@ -216,7 +217,6 @@ on boot
     chmod 0664 /sys/class/qcom-battery/quick_charge_type
     chown system system /sys/class/qcom-battery/adapter_id
     chmod 0664 /sys/class/qcom-battery/adapter_id
-    chown system system /sys/class/thermal/thermal_message/charger_temp
     chmod 0664 /sys/class/thermal/thermal_message/charger_temp
 
     # CPU and GPU clock controls. The governor is immutable on Adreno 710,
@@ -237,14 +237,11 @@ on boot
     chmod 0664 /sys/devices/system/cpu/cpufreq/policy4/scaling_min_freq
     chmod 0664 /sys/devices/system/cpu/cpufreq/policy4/scaling_max_freq
 
-    # Memory tuning (swappiness and compaction) and zram/dmabuf reporting.
-    chown system system /sys/vm/swappiness
-    chmod 0664 /sys/vm/swappiness
-    chown system system /sys/vm/compaction_proactiveness
-    chmod 0664 /sys/vm/compaction_proactiveness
-
-    # game plaid mode
-    chown system system  /sys/devices/virtual/gpu_plaid/plaid/game_data
+    # Memory tuning (UMM Tier 2). XiaomiParts writes /proc/sys/vm nodes, not /sys/vm.
+    chown system system /proc/sys/vm/swappiness
+    chmod 0664 /proc/sys/vm/swappiness
+    chown system system /proc/sys/vm/compaction_proactiveness
+    chmod 0664 /proc/sys/vm/compaction_proactiveness
 
     # Create persist for camera calibration data
     mkdir /mnt/vendor/persist/camera 0755 system cameraserver
@@ -506,109 +503,6 @@ service vendor.sniffer.circular /vendor/bin/tcpdump -i wlan0 -W 3 -C 300 -w /dat
 on property:sys.boot_completed=1
     enable vendor.qvirtmgr
     start  vendor.qvirtmgr
-
-on post-fs-data
-    chmod 0666 /dev/migt
-    restorecon /dev/migt
-    chmod 0777 /sys/module/migt/parameters/migt_freq
-    restorecon /sys/module/migt/parameters/migt_freq
-    chmod 0777 /sys/module/migt/parameters/migt_ms
-    restorecon /sys/module/migt/parameters/migt_ms
-    chmod 0777 /sys/module/migt/parameters/migt_thresh
-    restorecon /sys/module/migt/parameters/migt_thresh
-    chmod 0777 /sys/module/migt/parameters/boost_policy
-    restorecon /sys/module/migt/parameters/boost_policy
-    chmod 0777 /sys/module/migt/parameters/fps_variance_ratio
-    restorecon /sys/module/migt/parameters/fps_variance_ratio
-    chmod 0777 /sys/module/migt/parameters/super_task_max_num
-    restorecon /sys/module/migt/parameters/super_task_max_num
-    chmod 0777 /sys/module/migt/parameters/migt_ceiling_freq
-    restorecon /sys/module/migt/parameters/migt_ceiling_freq
-    chmod 0777 /sys/module/migt/parameters/stask_candidate_num
-    restorecon /sys/module/migt/parameters/stask_candidate_num
-    chmod 0666 /sys/module/migt/parameters/glk_disable
-    restorecon /sys/module/migt/parameters/glk_disable
-    chmod 0666 /sys/module/migt/parameters/glk_fbreak_enable
-    restorecon /sys/module/migt/parameters/glk_fbreak_enable
-    chmod 0666 /sys/module/migt/parameters/glk_freq_limit_walt
-    restorecon /sys/module/migt/parameters/glk_freq_limit_walt
-    chmod 0666 /sys/module/migt/parameters/glk_minfreq
-    restorecon /sys/module/migt/parameters/glk_minfreq
-    chmod 0666 /sys/module/migt/parameters/glk_maxfreq
-    restorecon /sys/module/migt/parameters/glk_maxfreq
-    chmod 0666 /sys/module/migt/parameters/force_stask_to_big
-    restorecon /sys/module/migt/parameters/force_stask_to_big
-    chmod 0666 /sys/module/migt/parameters/force_reset_runtime
-    restorecon /sys/module/migt/parameters/force_reset_runtime
-    chmod 0777 /sys/module/metis/parameters/minor_window_app
-    restorecon /sys/module/metis/parameters/minor_window_app
-    chmod 0666 /sys/module/migt/parameters/mi_viptask
-    restorecon /sys/module/migt/parameters/mi_viptask
-    chmod 0666 /sys/module/migt/parameters/mi_freq_enable
-    restorecon /sys/module/migt/parameters/mi_freq_enable
-
-    chmod 0666 /dev/metis
-    restorecon /dev/metis
-    chown 0666 /sys/module/metis/parameters
-    chmod 0664 /sys/module/metis/parameters/add_rebind_task_lit
-    chmod 0664 /sys/module/metis/parameters/add_rebind_task_mid
-    chmod 0664 /sys/module/metis/parameters/add_rebind_task_big
-    chmod 0664 /sys/module/metis/parameters/del_rebind_task_lit
-    chmod 0664 /sys/module/metis/parameters/del_rebind_task_mid
-    chmod 0664 /sys/module/metis/parameters/del_rebind_task_big
-    chmod 0664 /sys/module/metis/parameters/add_lclus_affinity_uidlist
-    chmod 0664 /sys/module/metis/parameters/del_lclus_affinity_uidlist
-    chmod 0664 /sys/module/metis/parameters/add_mclus_affinity_uidlist
-    chmod 0664 /sys/module/metis/parameters/del_mclus_affinity_uidlist
-    chmod 0664 /sys/module/metis/parameters/add_bclus_affinity_uidlist
-    chmod 0664 /sys/module/metis/parameters/del_bclus_affinity_uidlist
-    chmod 0664 /sys/module/metis/parameters/reset_clus_affinity_uidlist
-    chown root system /sys/module/metis/parameters
-    chown root system /sys/module/metis/parameters/add_rebind_task_lit
-    chown root system /sys/module/metis/parameters/add_rebind_task_mid
-    chown root system /sys/module/metis/parameters/add_rebind_task_big
-    chown root system /sys/module/metis/parameters/del_rebind_task_lit
-    chown root system /sys/module/metis/parameters/del_rebind_task_mid
-    chown root system /sys/module/metis/parameters/del_rebind_task_big
-    chown root system /sys/module/metis/parameters/add_lclus_affinity_uidlist
-    chown root system /sys/module/metis/parameters/del_lclus_affinity_uidlist
-    chown root system /sys/module/metis/parameters/add_mclus_affinity_uidlist
-    chown root system /sys/module/metis/parameters/del_mclus_affinity_uidlist
-    chown root system /sys/module/metis/parameters/add_bclus_affinity_uidlist
-    chown root system /sys/module/metis/parameters/del_bclus_affinity_uidlist
-    chown root system /sys/module/metis/parameters/reset_clus_affinity_uidlist
-
-    chmod 0666 /dev/metis
-    restorecon /dev/metis
-    chmod 0666 /sys/module/metis/parameters/mi_viptask
-    restorecon /sys/module/metis/parameters/mi_viptask
-    chmod 0666 /sys/module/metis/parameters/mi_boost_duration
-    restorecon /sys/module/metis/parameters/mi_boost_duration
-    chmod 0666 /sys/class/thermal/thermal_message/boost
-    restorecon /sys/class/thermal/thermal_message/boost
-    chmod 0666 /sys/module/metis/parameters/vip_link_enable
-    restorecon /sys/module/metis/parameters/vip_link_enable
-    chmod 0666 /sys/module/metis/parameters/mi_fboost_enable
-    restorecon /sys/module/metis/parameters/mi_fboost_enable
-    chmod 0666 /sys/module/metis/parameters/add_mi_viptask_enqueue_boost
-    restorecon /sys/module/metis/parameters/add_mi_viptask_enqueue_boost
-    chmod 0666 /sys/module/metis/parameters/del_mi_viptask_enqueue_boost
-    restorecon /sys/module/metis/parameters/del_mi_viptask_enqueue_boost
-    chmod 0666 /sys/module/metis/parameters/add_mi_viptask_sched_priority
-    restorecon /sys/module/metis/parameters/add_mi_viptask_sched_priority
-    chmod 0666 /sys/module/metis/parameters/del_mi_viptask_sched_priority
-    restorecon /sys/module/metis/parameters/del_mi_viptask_sched_priority
-    chmod 0666 /sys/module/metis/parameters/add_mi_viptask_sched_lit_core
-    restorecon /sys/module/metis/parameters/add_mi_viptask_sched_lit_core
-    chmod 0666 /sys/module/metis/parameters/del_mi_viptask_sched_lit_core
-    restorecon /sys/module/metis/parameters/del_mi_viptask_sched_lit_core
-    chmod 0666 /sys/module/metis/parameters/is_break_enable
-    restorecon /sys/module/metis/parameters/is_break_enable
-    chmod 0666 /sys/module/metis/parameters/binder_from_pid
-    restorecon /sys/module/metis/parameters/binder_from_pid
-
-    chmod 0662 /dev/miev
-    restorecon /dev/miev
 
 on property:sys.lmkd.memory.compact=1
     setprop sys.lmkd.memory.compact 0

@@ -20,17 +20,43 @@ and committed with `git commit -s`:
 - `lineage.dependencies`: removed the three kernel entries that LineageOS
   roomservice would resolve to `LineageOS/*`; kept `android_hardware_xiaomi`.
   Roomservice cannot point at another GitHub account, hence the local manifest.
-- `device.mk`: added `XiaomiParts` to `PRODUCT_PACKAGES` so the platform-signed
-  system_ext app from our fork is installed.
-- `sepolicy/vendor/xiaomi_parts.te`: grants `system_app` the sysfs access
-  XiaomiParts needs for charging, display, CPU and GPU nodes. AOSP system_app
-  has no sysfs write rule and no neverallow forbids this.
-- `rootdir/etc/init.target.rc`: chown/chmod for the charging, devfreq, cpufreq
-  and VM nodes XiaomiParts writes; display nodes are read-only sysfs attrs.
-- `README.md`: setup and blob-extraction instructions.
+- `device.mk`: added `XiaomiParts` to `PRODUCT_PACKAGES` and removed a
+  duplicated stepdetector permission copy rule. `NcmTetheringOverlay` is kept;
+  it is provided by `vendor/lineage/overlay/rro_packages/NcmTetheringOverlay`.
+- `sepolicy/vendor/{file.te,genfs_contexts,xiaomi_parts.te}`: narrow labels and
+  rules for the 6.6 charging, thermal, cpufreq, Adreno devfreq, DRM and
+  `/proc/sys/vm` nodes XiaomiParts uses. AOSP `system_app` has no sysfs/procfs
+  write rule by default; custom types avoid broadening the generic `sysfs` and
+  `proc` labels.
+- `rootdir/etc/init.target.rc`: corrected the LED path typo and `chown system`
+  calls, set `input_suspend` to the ueventd mode `0660` and made
+  `thermal_message/sconfig` writable by XiaomiParts, switched memory tunables
+  to the `/proc/sys/vm` paths actually used by UMM, added CPU `online` nodes,
+  and removed the dead MiGT/Metis/gpu_plaid block (no matching 6.6 driver or
+  DTS node).
+- `rootdir/etc/fstab.qcom` and `BoardConfig.mk`: wired `init_boot` and
+  `system_dlkm` for the GKI 6.6 build (partition size, AVB chain, filesystem
+  type, copy-out, blocklist and fstab mounts), and pointed the external module
+  roots at the paths that exist in `sm7435-modules`.
+- `modules/modules.list.second_stage`: dropped modules already loaded in the
+  first stage and `qcom-cpufreq-hw-debug.ko`, which has no enabled Kconfig.
+- `configs/hidl/*`: unchanged. `vendor.qti.hardware.qccsyshal@1.2` is provided
+  from `system_ext` and is already declared in `framework_manifest.xml`; it
+  must not be repeated in the device manifest. `target-level="6"` and
+  `BOARD_SHIPPING_API_LEVEL := 31` remain at the values inherited from the
+  base tree because changing the shipping FCM level requires a full VINTF
+  requalification.
+- `overlay/*`: unchanged. The GL eSIM overlay deliberately requires both
+  `ro.boot.hardware.sku=garnet` and `ro.boot.product.hardware.sku=GL`, as in
+  the upstream fix that distinguishes global garnet from garnetp.
+- `extract-files.py`: removed the stale `pureShot_parameter.xml` fixup; that
+  file is not in `proprietary-files.txt`.
+- `README.md`: setup, checked-in blobs and 6.6 integration notes.
 
-No vendor blob, overlay value, partition size or AVB key from the base tree was
-changed.
+`proprietary-files.txt`, `Android.bp` and the generated vendor makefiles remain
+as inherited from the audited base commit. The existing `REQUIRED=` entries
+point at modules supplied by `vendor_qcom_opensource_core-utils-vendor` and
+`hardware_qcom-caf_common`, so no blob dependency metadata was removed.
 
 ## Companion repositories
 

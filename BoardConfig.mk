@@ -12,11 +12,13 @@ BUILD_BROKEN_DUP_RULES := true
 AB_OTA_PARTITIONS := \
     boot \
     dtbo \
+    init_boot \
     odm \
     product \
     recovery \
     system \
     system_ext \
+    system_dlkm \
     vbmeta \
     vbmeta_system \
     vendor \
@@ -103,6 +105,8 @@ TARGET_KERNEL_CONFIG := \
 
 BOARD_BOOT_HEADER_VERSION := 4
 BOARD_MKBOOTIMG_ARGS := --header_version $(BOARD_BOOT_HEADER_VERSION)
+BOARD_INIT_BOOT_HEADER_VERSION := 4
+BOARD_MKBOOTIMG_INIT_ARGS += --header_version $(BOARD_INIT_BOOT_HEADER_VERSION)
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
 BOARD_USES_QCOM_MERGE_DTBS_SCRIPT := true
 
@@ -123,7 +127,6 @@ TARGET_KERNEL_EXT_MODULES := \
 	qcom/opensource/mmrm-driver \
 	qcom/opensource/audio-kernel \
 	qcom/opensource/camera-kernel \
-	qcom/opensource/cvp-kernel \
 	qcom/opensource/dataipa/drivers/platform/msm \
 	qcom/opensource/datarmnet/core \
 	qcom/opensource/datarmnet-ext/aps \
@@ -134,7 +137,7 @@ TARGET_KERNEL_EXT_MODULES := \
 	qcom/opensource/datarmnet-ext/sch \
 	qcom/opensource/datarmnet-ext/wlan \
 	qcom/opensource/display-drivers/msm \
-	qcom/opensource/eva-kernel \
+	qcom/opensource/eva-kernel-v1 \
 	qcom/opensource/video-driver \
 	qcom/opensource/wlan/qcacld-3.0/.adrastea
 
@@ -147,6 +150,7 @@ BOARD_VENDOR_RAMDISK_RECOVERY_KERNEL_MODULES_LOAD := $(first_stage_modules) $(se
 BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.vendor_blocklist.msm.parrot
 BOARD_VENDOR_KERNEL_MODULES_LOAD := $(second_stage_modules) $(vendor_dlkm_modules)
 BOARD_VENDOR_RAMDISK_KERNEL_MODULES_BLOCKLIST_FILE := $(BOARD_VENDOR_KERNEL_MODULES_BLOCKLIST_FILE)
+BOARD_SYSTEM_KERNEL_MODULES_BLOCKLIST_FILE := $(TARGET_KERNEL_SOURCE)/modules.systemdlkm_blocklist.msm.parrot
 BOOT_KERNEL_MODULES := $(first_stage_modules) $(second_stage_modules)
 
 # Partitions
@@ -154,6 +158,7 @@ BOOT_KERNEL_MODULES := $(first_stage_modules) $(second_stage_modules)
 
 BOARD_BOOTIMAGE_PARTITION_SIZE := 201326592
 BOARD_DTBOIMG_PARTITION_SIZE := 25165824
+BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 104857600
 BOARD_SUPER_PARTITION_SIZE := 9663676416
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 100663296
@@ -162,7 +167,7 @@ BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
 
 BOARD_USES_METADATA_PARTITION := true
 
-BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST := product system system_ext odm vendor vendor_dlkm
+BOARD_QTI_DYNAMIC_PARTITIONS_PARTITION_LIST := product system system_ext system_dlkm odm vendor vendor_dlkm
 BOARD_QTI_DYNAMIC_PARTITIONS_SIZE := 9659482112 # (BOARD_SUPER_PARTITION_SIZE - 4 MiB)
 BOARD_SUPER_PARTITION_GROUPS := qti_dynamic_partitions
 
@@ -172,11 +177,14 @@ BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_SYSTEM_EXTIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := erofs
 BOARD_VENDOR_DLKMIMAGE_FILE_SYSTEM_TYPE := erofs
+BOARD_SYSTEM_DLKMIMAGE_FILE_SYSTEM_TYPE := erofs
+BOARD_USES_SYSTEM_DLKMIMAGE := true
 
 TARGET_COPY_OUT_ODM := odm
 TARGET_COPY_OUT_PRODUCT := product
 TARGET_COPY_OUT_SYSTEM := system
 TARGET_COPY_OUT_SYSTEM_EXT := system_ext
+TARGET_COPY_OUT_SYSTEM_DLKM := system_dlkm
 TARGET_COPY_OUT_VENDOR := vendor
 TARGET_COPY_OUT_VENDOR_DLKM := vendor_dlkm
 
@@ -219,11 +227,17 @@ BOARD_AVB_RECOVERY_ALGORITHM := SHA256_RSA4096
 BOARD_AVB_RECOVERY_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 BOARD_AVB_RECOVERY_ROLLBACK_INDEX_LOCATION := 1
 
-BOARD_AVB_VBMETA_SYSTEM := system system_ext product
+BOARD_AVB_VBMETA_SYSTEM := system system_dlkm system_ext product
 BOARD_AVB_VBMETA_SYSTEM_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
 BOARD_AVB_VBMETA_SYSTEM_ALGORITHM := SHA256_RSA4096
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
 BOARD_AVB_VBMETA_SYSTEM_ROLLBACK_INDEX_LOCATION := 2
+
+# Chained vbmeta for init_boot (Android 13+ generic ramdisk).
+BOARD_AVB_INIT_BOOT_KEY_PATH := external/avb/test/data/testkey_rsa4096.pem
+BOARD_AVB_INIT_BOOT_ALGORITHM := SHA256_RSA4096
+BOARD_AVB_INIT_BOOT_ROLLBACK_INDEX := $(PLATFORM_SECURITY_PATCH_TIMESTAMP)
+BOARD_AVB_INIT_BOOT_ROLLBACK_INDEX_LOCATION := 3
 
 # WiFi
 BOARD_WLAN_DEVICE := qcwcn

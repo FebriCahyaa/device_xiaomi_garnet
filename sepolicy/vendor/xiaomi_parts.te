@@ -3,23 +3,16 @@
 # tuning through the sysfs nodes exposed by our 6.6 kernel and modules.
 #
 # AOSP system_app.te does not grant sysfs write access by default and no
-# neverallow forbids it for system_app, so these rules are scoped to that one
-# domain. init/target rc sets the file ownership and mode; SELinux only needs
-# to permit the opens and writes.
+# neverallow forbids this. Labels are kept narrow in genfs_contexts below so
+# only the tunables XiaomiParts actually uses are writable by system_app.
 
-allow system_app sysfs:dir r_dir_perms;
-allow system_app sysfs:file rw_file_perms;
-allow system_app sysfs:lnk_file r_file_perms;
+allow system_app xiaomi_parts_sysfs:dir r_dir_perms;
+allow system_app xiaomi_parts_sysfs:file rw_file_perms;
+allow system_app xiaomi_parts_sysfs:lnk_file r_file_perms;
 
-# Specific labels used by Qualcomm / Xiaomi nodes that would otherwise be
-# denied even with the generic sysfs grant above.
-allow system_app sysfs_devices_system_cpu:dir r_dir_perms;
-allow system_app sysfs_devices_system_cpu:file rw_file_perms;
-allow system_app sysfs_thermal:dir r_dir_perms;
-allow system_app sysfs_thermal:file rw_file_perms;
-allow system_app vendor_sysfs_qcom_battery:dir r_dir_perms;
-allow system_app vendor_sysfs_qcom_battery:file rw_file_perms;
-allow system_app vendor_sysfs_kgsl:dir r_dir_perms;
-allow system_app vendor_sysfs_kgsl:file rw_file_perms;
-allow system_app vendor_sysfs_graphics:dir r_dir_perms;
-allow system_app vendor_sysfs_graphics:file rw_file_perms;
+# VM tunables used by UMM Tier 2. Not under /sys.
+allow system_app xiaomi_parts_proc_vm:file rw_file_perms;
+
+# /sys/block/zram0 and /sys/kernel/dmabuf are read-only reporting nodes.
+allow system_app sysfs_zram:dir r_dir_perms;
+allow system_app sysfs_zram:file r_file_perms;
